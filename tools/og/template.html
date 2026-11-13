@@ -1,0 +1,139 @@
+<!doctype html>
+<!--
+  Sosyal medya / OG görsel şablonu. Doğrudan açılmaz; tools/og/render.sh
+  bunu ?v=<konu>&f=<format>&lang=<dil> ile headless Chrome'da render eder.
+  Formatlar: landscape 1200x630, square 1080x1080, story 1080x1920
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  :root {
+    --brand: #EF6B4A; --brand-shade: #D25E41; --brand-tint: #F17A5C;
+    --ink: #2B1D17; --muted: #6E5D55; --bg: #F7E8DA; --glow: #F3D9C2;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { overflow: hidden; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+    color: var(--ink); -webkit-font-smoothing: antialiased;
+    background:
+      radial-gradient(70% 60% at 0% 0%, var(--glow), transparent 70%),
+      radial-gradient(60% 50% at 100% 100%, rgba(241, 122, 92, .22), transparent 70%),
+      var(--bg);
+  }
+  .canvas { position: relative; overflow: hidden; }
+  .brand { display: flex; align-items: center; gap: .55em; font-weight: 700; }
+  .brand img { border-radius: 22%; }
+  .eyebrow { color: var(--brand); font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+  h1 { font-weight: 800; letter-spacing: -.03em; line-height: 1.02; }
+  .sub { color: var(--brand); font-weight: 700; line-height: 1.25; letter-spacing: -.01em; }
+  .pills { display: flex; flex-wrap: wrap; gap: .5em; }
+  .pill { background: var(--brand); color: #fff; font-weight: 700; border-radius: 999px; padding: .5em 1.05em; white-space: nowrap; }
+  .pill.ghost { background: rgba(255,255,255,.7); color: var(--ink); }
+  .shot { border-radius: 40px; overflow: hidden; box-shadow: 0 40px 80px rgba(120, 60, 30, .28); background: #fff; }
+  /* Mağaza görselinin üstündeki başlık kısmını (~%23) kırp, yalnızca telefon kalsın */
+  .shot img { display: block; width: 100%; height: auto; margin-top: -50%; }
+
+  /* Widget maketi */
+  .home { border-radius: 48px; padding: 34px; background: linear-gradient(160deg, var(--glow), var(--brand-tint)); box-shadow: 0 40px 80px rgba(120, 60, 30, .28); }
+  .wdg { display: grid; grid-template-columns: 1fr 1fr auto; gap: 18px; align-items: center; background: #fff; border-radius: 30px; padding: 28px 26px; box-shadow: 0 10px 24px rgba(0,0,0,.08); }
+  .wdg small { display: block; font-size: 15px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .wdg b { display: block; font-size: 40px; line-height: 1.15; font-variant-numeric: tabular-nums; }
+  .wdg .t b { color: var(--brand); }
+  .wdg .add { width: 64px; height: 64px; border-radius: 50%; background: var(--brand); color: #fff; display: grid; place-items: center; font-size: 40px; font-weight: 600; }
+  .apps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 30px; }
+  .apps span { aspect-ratio: 1; border-radius: 20px; background: rgba(255,255,255,.45); }
+  .apps span:first-child { background: url(../../assets/img/icon-256.png) center / cover; }
+
+  /* landscape 1200x630 */
+  .landscape { width: 1200px; height: 630px; display: grid; grid-template-columns: 1fr 400px; padding: 0 0 0 72px; }
+  .landscape .text { display: flex; flex-direction: column; justify-content: center; gap: 22px; padding-right: 30px; }
+  .landscape .brand { font-size: 30px; } .landscape .brand img { width: 52px; height: 52px; }
+  .landscape .eyebrow { font-size: 18px; }
+  .landscape h1 { font-size: 76px; }
+  .landscape .sub { font-size: 32px; }
+  .landscape .pills { font-size: 20px; margin-top: 8px; }
+  .landscape .visual { position: relative; }
+  .landscape .shot { position: absolute; left: 34px; top: 40px; width: 330px; height: 550px; transform: rotate(3deg); }
+  .landscape .home { position: absolute; left: -60px; top: 150px; width: 430px; transform: rotate(-3deg); }
+
+  /* square 1080x1080 */
+  .square { width: 1080px; height: 1080px; padding: 80px 80px 0; text-align: center; }
+  .square .text { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .square .brand { font-size: 32px; } .square .brand img { width: 56px; height: 56px; }
+  .square .eyebrow { display: none; }
+  .square h1 { font-size: 92px; }
+  .square .sub { font-size: 36px; max-width: 860px; }
+  .square .pills { display: none; }
+  .square .shot { position: absolute; left: 50%; top: 400px; width: 440px; height: 760px; transform: translateX(-50%); }
+  .square .home { position: absolute; left: 50%; top: 520px; width: 640px; transform: translateX(-50%); }
+
+  /* story 1080x1920 */
+  .story { width: 1080px; height: 1920px; padding: 170px 90px 0; text-align: center; }
+  .story .text { display: flex; flex-direction: column; align-items: center; gap: 28px; }
+  .story .brand { font-size: 40px; } .story .brand img { width: 72px; height: 72px; }
+  .story .eyebrow { font-size: 26px; }
+  .story h1 { font-size: 118px; }
+  .story .sub { font-size: 46px; max-width: 880px; }
+  .story .pills { font-size: 30px; justify-content: center; margin-top: 6px; }
+  .story .shot { position: absolute; left: 50%; top: 860px; width: 640px; height: 1200px; transform: translateX(-50%); }
+  .story .home { position: absolute; left: 50%; top: 1090px; width: 860px; transform: translateX(-50%); }
+  .story .home .wdg b { font-size: 54px; }
+  .story .home .wdg small { font-size: 19px; }
+  .story .home .wdg .add { width: 84px; height: 84px; font-size: 52px; }
+</style>
+</head>
+<body>
+<div id="c" class="canvas">
+  <div class="text">
+    <div class="brand"><img src="../../assets/img/icon-256.png" alt="">Smokeless</div>
+    <p class="eyebrow" id="eyebrow"></p>
+    <h1 id="h"></h1>
+    <p class="sub" id="s"></p>
+    <div class="pills"><span class="pill">App Store</span><span class="pill">Google Play</span><span class="pill ghost" id="free"></span></div>
+  </div>
+  <div class="visual" id="visual"></div>
+</div>
+<script>
+  var T = {
+    tr: {
+      free: "Ücretsiz",
+      main:     { e: "Sigarayı bırakma yardımcısı", h: "Say. Azalt. Bırak.", s: "Saydığını azaltırsın, azalttığını bırakırsın.", shot: "01-craving" },
+      craving:  { e: "Kriz desteği", h: "Krizi 5 dakikada atlat.", s: "Ritimli nefes ve baş etme önerileri yanında.", shot: "02-ride-it-out" },
+      plan:     { e: "Azalan plan", h: "Her gün biraz daha az.", s: "Hedefin sıfıra inene kadar kendiliğinden düşer.", shot: "04-plan" },
+      recovery: { e: "İyileşme takvimi", h: "Vücudun iyileşiyor.", s: "20 dakikadan 15 yıla, her adımı gör.", shot: "03-recovery" },
+      insights: { e: "İstatistikler", h: "Krizler ne zaman geliyor?", s: "Saatlik, haftalık ve yıllık grafiklerle öğren.", shot: "05-insights" },
+      widget:   { e: "Ana ekran widget'ı", h: "Saymak için açman bile gerekmez.", s: "Sigarasız geçen süre her an ana ekranında.", w: ["Sigarasız", "Bugün"] }
+    },
+    en: {
+      free: "Free",
+      main:     { e: "Quit-smoking companion", h: "Count. Cut down. Quit.", s: "What you count, you cut. What you cut, you quit.", shot: "01-craving" },
+      craving:  { e: "Craving support", h: "Beat the craving in 5 minutes.", s: "Paced breathing and coping actions, right there.", shot: "02-ride-it-out" },
+      plan:     { e: "Taper plan", h: "A little less every day.", s: "Your target falls on its own until it reaches zero.", shot: "04-plan" },
+      recovery: { e: "Recovery timeline", h: "Your body is healing.", s: "From 20 minutes to 15 years, see every step.", shot: "03-recovery" },
+      insights: { e: "Insights", h: "When do cravings hit?", s: "Find out with hourly, weekly and yearly charts.", shot: "05-insights" },
+      widget:   { e: "Home screen widget", h: "Count without opening the app.", s: "Your smoke-free time, always on your home screen.", w: ["Smoke-free", "Today"] }
+    }
+  };
+  var q = new URLSearchParams(location.search);
+  var lang = q.get("lang") === "en" ? "en" : "tr";
+  var dir = lang === "en" ? "en" : "tr";
+  var v = T[lang][q.get("v")] ? q.get("v") : "main";
+  var f = q.get("f") || "landscape";
+  var d = T[lang][v];
+  document.documentElement.lang = lang;
+  document.getElementById("c").classList.add(f);
+  document.getElementById("eyebrow").textContent = d.e;
+  document.getElementById("h").textContent = d.h;
+  document.getElementById("s").textContent = d.s;
+  document.getElementById("free").textContent = T[lang].free;
+  var vis = document.getElementById("visual");
+  if (d.shot) {
+    vis.innerHTML = '<div class="shot"><img src="../../assets/img/' + dir + '/' + d.shot + '.jpg" alt=""></div>';
+  } else {
+    vis.innerHTML = '<div class="home"><div class="wdg"><div class="t"><small>' + d.w[0] + '</small><b>15:06:42</b></div><div><small>' + d.w[1] + '</small><b>3</b></div><div class="add">+</div></div><div class="apps"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>';
+  }
+</script>
+</body>
+</html>

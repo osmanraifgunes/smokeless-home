@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Smokeless — Say. Azalt. Bırak.</title>
+  <meta name="description" content="Sigara krizini atlat, azalan hedefle bırak — her şey cihazında kalır. Smokeless iOS ve Android'de ücretsiz.">
+  <meta name="theme-color" content="#EF6B4A">
+  <meta name="apple-itunes-app" content="app-id=6798220798">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/icon-256.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Smokeless — Say. Azalt. Bırak.">
+  <meta property="og:description" content="Saydığını azaltırsın, azalttığını bırakırsın. iOS ve Android'de ücretsiz.">
+  <meta property="og:image" content="assets/img/og.png">
+  <meta name="twitter:card" content="summary">
+
+  <style>
+    /* Uygulamanın temasıyla birebir (src/theme/brand.css + mağaza görselleri).
+       Uygulama yalnızca açık temada çalıştığı için sayfa da tek, açık tema. */
+    :root {
+      color-scheme: light;
+      --brand: #EF6B4A;        /* --ion-color-primary */
+      --brand-shade: #D25E41;  /* --ion-color-primary-shade */
+      --brand-tint: #F17A5C;   /* --ion-color-primary-tint */
+      --ink: #2B1D17;          /* mağaza görselleri başlık rengi */
+      --muted: #6E5D55;
+      --bg: #F7E8DA;           /* mağaza görselleri arka planı */
+      --bg-glow: #F3D9C2;      /* mağaza görselleri üst köşe tonu */
+      --bg-alt: #FBF2EA;
+      --card: #FFFFFF;
+      --line: #EED9C7;
+      --radius: 20px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--brand); }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+    /* Header */
+    header { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+    header .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.15rem; color: var(--ink); text-decoration: none; }
+    .logo img { width: 36px; height: 36px; border-radius: 9px; }
+    .lang { display: flex; gap: 4px; background: var(--bg-alt); border-radius: 999px; padding: 4px; }
+    .lang button { border: 0; background: transparent; color: var(--muted); font: inherit; font-size: .85rem; font-weight: 600; padding: 6px 12px; border-radius: 999px; cursor: pointer; }
+    .lang button[aria-pressed="true"] { background: var(--card); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+
+    /* Hero */
+    .hero { padding: 64px 0 40px; background: radial-gradient(900px 520px at 0% 0%, var(--bg-glow), transparent 70%); }
+    .hero .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; }
+    .eyebrow { color: var(--brand); font-weight: 800; letter-spacing: .18em; font-size: .85rem; text-transform: uppercase; margin: 0 0 12px; }
+    h1 { font-size: clamp(2.3rem, 5.5vw, 3.8rem); line-height: 1.05; margin: 0 0 18px; letter-spacing: -.02em; }
+    .tagline { font-size: clamp(1.25rem, 2.4vw, 1.6rem); font-weight: 700; line-height: 1.3; color: var(--brand); margin: 0 0 18px; letter-spacing: -.01em; }
+    .lead { font-size: 1.15rem; color: var(--muted); margin: 0 0 28px; max-width: 34em; }
+    .stores { display: flex; flex-wrap: wrap; gap: 12px; }
+    .store { display: inline-flex; align-items: center; gap: 12px; min-width: 190px; padding: 10px 20px 10px 16px; border-radius: 14px; background: var(--brand); color: #fff; text-decoration: none; box-shadow: 0 6px 16px rgba(239, 107, 74, .28); transition: transform .15s ease, box-shadow .15s ease, background .15s ease; }
+    .store:hover { background: var(--brand-shade); transform: translateY(-2px); box-shadow: 0 10px 22px rgba(210, 94, 65, .32); }
+    .store .play-mono path { fill: #fff; }
+    .store svg { width: 28px; height: 28px; flex: none; }
+    .store small { display: block; font-size: .7rem; opacity: .8; line-height: 1.1; }
+    .store strong { display: block; font-size: 1.15rem; line-height: 1.2; }
+    .free { margin-top: 14px; font-size: .9rem; color: var(--muted); }
+    .hero-shot { justify-self: center; width: min(340px, 100%); }
+    .hero-shot img { width: 100%; height: auto; border-radius: 28px; box-shadow: 0 30px 60px rgba(120, 60, 30, .22); display: block; }
+
+    /* Sections */
+    section { padding: 72px 0; }
+    section.alt { background: var(--bg-alt); }
+    h2 { font-size: clamp(1.7rem, 3.5vw, 2.4rem); margin: 0 0 12px; letter-spacing: -.01em; }
+    .section-lead { color: var(--muted); margin: 0 0 40px; max-width: 40em; }
+
+    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .feature { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; box-shadow: 0 4px 14px rgba(120, 60, 30, .06); }
+    .feature .ico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: color-mix(in srgb, var(--brand) 14%, transparent); font-size: 1.35rem; margin-bottom: 14px; }
+    .feature h3 { margin: 0 0 8px; font-size: 1.1rem; }
+    .feature p { margin: 0; color: var(--muted); font-size: .97rem; }
+
+    .widget-band { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+    .widget-band ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+    .widget-band li { display: flex; gap: 10px; color: var(--muted); }
+    .widget-band li::before { content: "✓"; color: var(--brand); font-weight: 800; }
+    .homescreen { justify-self: center; width: min(380px, 100%); padding: 26px; border-radius: 34px; background: linear-gradient(160deg, var(--bg-glow), var(--brand-tint)); box-shadow: 0 24px 50px rgba(120, 60, 30, .2); }
+    .wdg { display: grid; grid-template-columns: 1fr 1fr auto; gap: 14px; align-items: center; background: var(--card); border-radius: 24px; padding: 20px 18px; box-shadow: 0 8px 20px rgba(0,0,0,.08); }
+    .wdg small { display: block; font-size: .64rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .wdg b { display: block; font-size: 1.55rem; line-height: 1.15; color: var(--ink); font-variant-numeric: tabular-nums; }
+    .wdg .timer b { color: var(--brand); }
+    .wdg .add { width: 48px; height: 48px; border-radius: 50%; background: var(--brand); color: #fff; display: grid; place-items: center; font-size: 1.6rem; font-weight: 600; }
+    .apps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 22px; }
+    .apps span { aspect-ratio: 1; border-radius: 14px; background: rgba(255,255,255,.45); }
+    .apps span:first-child { background: url(assets/img/icon-256.png) center / cover; }
+    .gallery { display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 4px 20px; -webkit-overflow-scrolling: touch; }
+    .gallery img { flex: none; width: 240px; height: auto; border-radius: 22px; scroll-snap-align: start; box-shadow: 0 12px 30px rgba(120, 60, 30, .14); }
+
+    .privacy { display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 36px; }
+    .privacy .big { font-size: 3rem; }
+    .privacy p { margin: 0; color: var(--muted); }
+
+    .cta { text-align: center; }
+    .cta .stores { justify-content: center; }
+    .cta img { width: 88px; height: 88px; border-radius: 22px; margin-bottom: 18px; }
+
+    .disclaimer { font-size: .85rem; color: var(--muted); max-width: 46em; margin: 32px auto 0; text-align: center; }
+
+    footer { border-top: 1px solid var(--line); padding: 28px 0; font-size: .9rem; color: var(--muted); }
+    footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; }
+    footer nav { display: flex; gap: 20px; }
+    footer a { color: var(--muted); }
+
+    @media (max-width: 860px) {
+      .hero { padding-top: 40px; }
+      .hero .wrap { grid-template-columns: 1fr; text-align: center; }
+      .lead { margin-left: auto; margin-right: auto; }
+      .hero .stores { justify-content: center; }
+      .hero-shot { width: min(280px, 80%); }
+      .features { grid-template-columns: 1fr; }
+      .privacy { grid-template-columns: 1fr; text-align: center; padding: 28px 20px; }
+      .widget-band { grid-template-columns: 1fr; gap: 32px; }
+    }
+    @media (min-width: 861px) and (max-width: 1020px) { .features { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <a class="logo" href="#"><img src="assets/img/icon-256.png" alt="">Smokeless</a>
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="tr" aria-pressed="true">TR</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div>
+          <p class="eyebrow">Smokeless</p>
+          <h1 data-i18n="hero.title">Say. Azalt. Bırak.</h1>
+          <p class="tagline" data-i18n="hero.tagline">Saydığını azaltırsın, azalttığını bırakırsın.</p>
+          <p class="lead" data-i18n="hero.lead">Farkına vardığın her sigara bir sonrakini zorlaştırır. Smokeless her gün biraz daha düşen bir hedef koyar, kriz anında yanında olur — ve bir gün sayacak bir şey kalmaz.</p>
+          <div class="stores">
+            <a class="store" href="https://apps.apple.com/app/id6798220798" target="_blank" rel="noopener" data-store="ios">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.37 12.62c-.02-2.3 1.88-3.4 1.96-3.46-1.07-1.56-2.73-1.78-3.32-1.8-1.41-.14-2.76.83-3.47.83-.72 0-1.82-.81-3-.79-1.54.02-2.96.9-3.75 2.27-1.6 2.78-.41 6.89 1.15 9.14.76 1.1 1.67 2.34 2.86 2.3 1.15-.05 1.58-.74 2.96-.74 1.39 0 1.77.74 2.98.72 1.23-.02 2.01-1.12 2.76-2.23.87-1.28 1.23-2.52 1.25-2.58-.03-.01-2.4-.92-2.42-3.66zM14.1 5.86c.63-.77 1.06-1.83.94-2.89-.91.04-2.01.61-2.66 1.37-.58.68-1.09 1.76-.96 2.8 1.02.08 2.05-.51 2.68-1.28z"/></svg>
+              <span><small data-i18n="store.ios.small">App Store'dan</small><strong>App Store</strong></span>
+            </a>
+            <a class="store" href="https://play.google.com/store/apps/details?id=com.org.smokeless" target="_blank" rel="noopener" data-store="android">
+              <svg class="play-mono" viewBox="0 0 24 24" aria-hidden="true"><path fill="#00D7FE" d="M3.6 2.2c-.2.2-.3.6-.3 1v17.6c0 .4.1.8.3 1l.1.1 9.9-9.9v-.2L3.7 2.1z"/><path fill="#FFCE00" d="M16.9 15.3l-3.3-3.3v-.2l3.3-3.3.1.1 3.9 2.2c1.1.6 1.1 1.7 0 2.3l-3.9 2.2z"/><path fill="#FF3A44" d="M17 15.2L13.6 11.9 3.6 21.8c.4.4 1 .4 1.7.1l11.7-6.7"/><path fill="#00F076" d="M17 8.5L5.3 1.9c-.7-.4-1.3-.3-1.7.1l10 10z"/></svg>
+              <span><small data-i18n="store.android.small">Google Play'den</small><strong>Google Play</strong></span>
+            </a>
+          </div>
+          <p class="free" data-i18n="hero.free">Ücretsiz · Hesap gerekmez · Ana ekran widget'ı · 15 dil</p>
+        </div>
+        <div class="hero-shot">
+          <img data-shot="01-craving" src="assets/img/tr/01-craving.jpg" width="1100" height="2390" alt="Smokeless ana ekranı">
+        </div>
+      </div>
+    </section>
+
+    <section class="alt" id="features">
+      <div class="wrap">
+        <h2 data-i18n="features.title">Bırakmak için ihtiyacın olan her şey</h2>
+        <p class="section-lead" data-i18n="features.lead">Uygulamanın ana eylemi kayıt tutmak değil, kriz desteği. Direndiğin her kriz sayılır.</p>
+        <div class="features">
+          <div class="feature"><div class="ico">🫁</div><h3 data-i18n="f1.t">Krizi atlat</h3><p data-i18n="f1.d">Ritimli nefes, beş dakikalık geri sayım ve dönüşümlü baş etme önerileriyle isteğin geçmesine yardım eder.</p></div>
+          <div class="feature"><div class="ico">📉</div><h3 data-i18n="f2.t">Azalan bir plan</h3><p data-i18n="f2.d">Tamamen bırak ya da kademeli azalt. Günlük hedefin her gün otomatik olarak düşer.</p></div>
+          <div class="feature"><div class="ico">❤️</div><h3 data-i18n="f3.t">Vücudunun iyileşmesi</h3><p data-i18n="f3.d">20 dakikadan 15 yıla, sigarasız kaldıkça vücudunda nelerin değiştiğini gör.</p></div>
+          <div class="feature"><div class="ico">💰</div><h3 data-i18n="f4.t">Biriktirdiğini gör</h3><p data-i18n="f4.d">İçmediğin sigaraları ve cebinde kalan parayı başlangıç noktana göre say.</p></div>
+          <div class="feature"><div class="ico">📊</div><h3 data-i18n="f5.t">Kendi istatistiklerin</h3><p data-i18n="f5.d">Saatlik, haftalık ve yıllık grafiklerle isteklerinin ne zaman yoğunlaştığını öğren.</p></div>
+          <div class="feature"><div class="ico">🤝</div><h3 data-i18n="f6.t">Gerçek destek</h3><p data-i18n="f6.d">Ücretsiz ve gizli ulusal bırakma hizmetlerine ve destek hatlarına tek dokunuşla ulaş.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="widget">
+      <div class="wrap widget-band">
+        <div>
+          <p class="eyebrow" data-i18n="widget.eyebrow">Ana ekran widget'ı</p>
+          <h2 data-i18n="widget.title">Saymak için uygulamayı açmana bile gerek yok</h2>
+          <p class="section-lead" style="margin-bottom:24px" data-i18n="widget.lead">Smokeless widget'ı ana ekranında durur; her baktığında ne kadar yol aldığını hatırlatır.</p>
+          <ul>
+            <li data-i18n="widget.l1">Sigarasız geçen süre, canlı sayaçla</li>
+            <li data-i18n="widget.l2">Günün sayısı tek bakışta</li>
+            <li data-i18n="widget.l3">Tek dokunuşla kayıt, planın hep doğru kalsın</li>
+            <li data-i18n="widget.l4">iPhone ve Android'de</li>
+          </ul>
+        </div>
+        <div class="homescreen" aria-hidden="true">
+          <div class="wdg">
+            <div class="timer"><small data-i18n="widget.w1">Sigarasız</small><b>15:06:42</b></div>
+            <div><small data-i18n="widget.w2">Bugün</small><b>3</b></div>
+            <div class="add">+</div>
+          </div>
+          <div class="apps"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="alt" id="screens">
+      <div class="wrap">
+        <h2 data-i18n="screens.title">Uygulamaya göz at</h2>
+        <p class="section-lead" data-i18n="screens.lead">Sade, sakin ve seni yargılamayan bir arayüz.</p>
+        <div class="gallery">
+          <img data-shot="01-craving" src="assets/img/tr/01-craving.jpg" width="1100" height="2390" loading="lazy" alt="">
+          <img data-shot="02-ride-it-out" src="assets/img/tr/02-ride-it-out.jpg" width="1100" height="2390" loading="lazy" alt="">
+          <img data-shot="03-recovery" src="assets/img/tr/03-recovery.jpg" width="1100" height="2390" loading="lazy" alt="">
+          <img data-shot="04-plan" src="assets/img/tr/04-plan.jpg" width="1100" height="2390" loading="lazy" alt="">
+          <img data-shot="05-insights" src="assets/img/tr/05-insights.jpg" width="1100" height="2390" loading="lazy" alt="">
+          <img data-shot="08-support" src="assets/img/tr/08-support.jpg" width="1100" height="2390" loading="lazy" alt="">
+        </div>
+      </div>
+    </section>
+
+    <section id="privacy">
+      <div class="wrap">
+        <div class="privacy">
+          <div class="big">🔒</div>
+          <div>
+            <h2 data-i18n="privacy.title">Verilerin sende kalır</h2>
+            <p data-i18n="privacy.d">Smokeless'ın hesabı ve uzak sunucusu yoktur. Kayıtların ve ayarların yalnızca cihazında saklanır; istediğin zaman yerel yedek alabilir veya geri yükleyebilirsin.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta alt" id="download">
+      <div class="wrap">
+        <img src="assets/img/icon-256.png" alt="Smokeless">
+        <h2 data-i18n="cta.title">Bugün sigarasız ilk adımını at</h2>
+        <p class="section-lead" style="margin-left:auto;margin-right:auto" data-i18n="cta.lead">iPhone, iPad ve Android'de ücretsiz.</p>
+        <div class="stores">
+          <a class="store" href="https://apps.apple.com/app/id6798220798" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.37 12.62c-.02-2.3 1.88-3.4 1.96-3.46-1.07-1.56-2.73-1.78-3.32-1.8-1.41-.14-2.76.83-3.47.83-.72 0-1.82-.81-3-.79-1.54.02-2.96.9-3.75 2.27-1.6 2.78-.41 6.89 1.15 9.14.76 1.1 1.67 2.34 2.86 2.3 1.15-.05 1.58-.74 2.96-.74 1.39 0 1.77.74 2.98.72 1.23-.02 2.01-1.12 2.76-2.23.87-1.28 1.23-2.52 1.25-2.58-.03-.01-2.4-.92-2.42-3.66zM14.1 5.86c.63-.77 1.06-1.83.94-2.89-.91.04-2.01.61-2.66 1.37-.58.68-1.09 1.76-.96 2.8 1.02.08 2.05-.51 2.68-1.28z"/></svg>
+            <span><small data-i18n="store.ios.small">App Store'dan</small><strong>App Store</strong></span>
+          </a>
+          <a class="store" href="https://play.google.com/store/apps/details?id=com.org.smokeless" target="_blank" rel="noopener">
+            <svg class="play-mono" viewBox="0 0 24 24" aria-hidden="true"><path fill="#00D7FE" d="M3.6 2.2c-.2.2-.3.6-.3 1v17.6c0 .4.1.8.3 1l.1.1 9.9-9.9v-.2L3.7 2.1z"/><path fill="#FFCE00" d="M16.9 15.3l-3.3-3.3v-.2l3.3-3.3.1.1 3.9 2.2c1.1.6 1.1 1.7 0 2.3l-3.9 2.2z"/><path fill="#FF3A44" d="M17 15.2L13.6 11.9 3.6 21.8c.4.4 1 .4 1.7.1l11.7-6.7"/><path fill="#00F076" d="M17 8.5L5.3 1.9c-.7-.4-1.3-.3-1.7.1l10 10z"/></svg>
+            <span><small data-i18n="store.android.small">Google Play'den</small><strong>Google Play</strong></span>
+          </a>
+        </div>
+        <p class="disclaimer" data-i18n="disclaimer">Smokeless bir kendine yardım aracıdır; tıbbi tavsiye, teşhis veya tedavi sunmaz ve profesyonel desteğin yerine geçmez. Klinik destek için bir sağlık profesyoneline ya da ALO 171 Sigara Bırakma Hattı'na başvurun.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© <span id="year">2026</span> Smokeless</span>
+      <nav>
+        <a href="https://worldstvmobile.com/privacy.html" target="_blank" rel="noopener" data-i18n="footer.privacy">Gizlilik Politikası</a>
+        <a href="#download" data-i18n="footer.download">İndir</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var I18N = {
+        en: {
+          "_title": "Smokeless — Count. Cut down. Quit.",
+          "hero.title": "Count. Cut down. Quit.",
+          "hero.tagline": "What you count, you cut. What you cut, you quit.",
+          "hero.lead": "Every cigarette you notice makes the next one harder. Smokeless sets a target that drops a little every day and stays with you through every craving — until there is nothing left to count.",
+          "hero.free": "Free · No account needed · Home screen widget · 15 languages",
+          "store.ios.small": "Download on the",
+          "store.android.small": "Get it on",
+          "features.title": "Everything you need to quit",
+          "features.lead": "Craving support is the app's main action, not logging. Every craving you resist counts.",
+          "f1.t": "Beat the craving", "f1.d": "Paced breathing, a five-minute countdown and rotating coping suggestions help you ride out the urge.",
+          "f2.t": "A plan that goes down", "f2.d": "Quit completely or cut down gradually. Your daily target falls automatically every day.",
+          "f3.t": "Watch your body recover", "f3.d": "See what changes as you stay smoke-free, from 20 minutes to 15 years.",
+          "f4.t": "See what you're saving", "f4.d": "Count the cigarettes you didn't smoke and the money that stays in your pocket.",
+          "f5.t": "Your own insights", "f5.d": "Hourly, weekly and yearly charts show when your urges cluster.",
+          "f6.t": "Real support", "f6.d": "Reach free, confidential national quit services and helplines in one tap.",
+          "widget.eyebrow": "Home screen widget",
+          "widget.title": "You don't even need to open the app to count",
+          "widget.lead": "The Smokeless widget lives on your home screen and reminds you how far you've come every time you look.",
+          "widget.l1": "Smoke-free time on a live timer",
+          "widget.l2": "Today's count at a glance",
+          "widget.l3": "One-tap recording keeps your plan accurate",
+          "widget.l4": "On iPhone and Android",
+          "widget.w1": "Smoke-free", "widget.w2": "Today",
+          "screens.title": "Take a look inside",
+          "screens.lead": "A calm, simple interface that never judges you.",
+          "privacy.title": "Your data stays with you",
+          "privacy.d": "Smokeless has no account and no remote server. Your records and settings stay on your device, and you can export or restore a local backup at any time.",
+          "cta.title": "Take your first smoke-free step today",
+          "cta.lead": "Free on iPhone, iPad and Android.",
+          "disclaimer": "Smokeless is a self-help tool. It does not provide medical advice, diagnosis or treatment and is not a substitute for professional quit support. For clinical support, talk to a healthcare professional or your national quitline.",
+          "footer.privacy": "Privacy Policy",
+          "footer.download": "Download"
+        }
+      };
+      var nodes = document.querySelectorAll("[data-i18n]");
+      var TR = { "_title": document.title };
+      nodes.forEach(function (n) { TR[n.getAttribute("data-i18n")] = n.textContent; });
+      I18N.tr = TR;
+
+      function apply(lang) {
+        var dict = I18N[lang] || TR;
+        nodes.forEach(function (n) { var v = dict[n.getAttribute("data-i18n")]; if (v) n.textContent = v; });
+        document.title = dict._title;
+        document.documentElement.lang = lang;
+        var dir = lang === "tr" ? "tr" : "en";
+        document.querySelectorAll("[data-shot]").forEach(function (img) {
+          img.src = "assets/img/" + dir + "/" + img.getAttribute("data-shot") + ".jpg";
+        });
+        document.querySelectorAll(".lang button").forEach(function (b) {
+          b.setAttribute("aria-pressed", String(b.getAttribute("data-lang") === lang));
+        });
+        try { localStorage.setItem("lang", lang); } catch (e) {}
+      }
+
+      document.querySelectorAll(".lang button").forEach(function (b) {
+        b.addEventListener("click", function () { apply(b.getAttribute("data-lang")); });
+      });
+
+      var saved = null;
+      try { saved = localStorage.getItem("lang"); } catch (e) {}
+      var initial = saved || ((navigator.language || "tr").toLowerCase().indexOf("tr") === 0 ? "tr" : "en");
+      if (initial !== "tr") apply(initial);
+
+      document.getElementById("year").textContent = new Date().getFullYear();
+    })();
+  </script>
+</body>
+</html>
