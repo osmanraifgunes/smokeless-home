@@ -16,7 +16,7 @@ https://osmanraifgunes.github.io/smokeless-home/
 | `assets/og/` | Sosyal medya görselleri: 6 konu × 2 dil × 3 format (1200×630, 1080×1080, 1080×1920). |
 | `tools/og/` | Bu görselleri üreten şablon ve betik. |
 | `robots.txt`, `sitemap.xml` | SEO. |
-| `.github/workflows/pages.yml` | `main`'e push edildiğinde GitHub Pages'e deploy. |
+| Yayın | GitHub Pages, "Deploy from branch": `main` / kök. Her push otomatik yayınlanır. |
 
 ## Dil
 
