@@ -47,8 +47,10 @@
   .apps span:first-child { background: url(../../assets/img/icon-256.png) center / cover; }
 
   /* landscape 1200x630 */
-  .landscape { width: 1200px; height: 630px; display: grid; grid-template-columns: 1fr 400px; padding: 0 0 0 72px; }
-  .landscape .text { display: flex; flex-direction: column; justify-content: center; gap: 22px; padding-right: 30px; }
+  .landscape { width: 1200px; height: 630px; display: grid; grid-template-columns: 1fr 400px; padding-inline-start: 72px; }
+  [dir=rtl] .landscape .shot { left: auto; right: 34px; transform: rotate(-3deg); }
+  [dir=rtl] .landscape .home { left: auto; right: -60px; transform: rotate(3deg); }
+  .landscape .text { display: flex; flex-direction: column; justify-content: center; gap: 22px; padding-inline-end: 30px; }
   .landscape .brand { font-size: 30px; } .landscape .brand img { width: 52px; height: 52px; }
   .landscape .eyebrow { font-size: 18px; }
   .landscape h1 { font-size: 76px; }
@@ -82,6 +84,14 @@
   .story .home .wdg b { font-size: 54px; }
   .story .home .wdg small { font-size: 19px; }
   .story .home .wdg .add { width: 84px; height: 84px; font-size: 52px; }
+  /* Latin dışı yazılar: harf aralığı ve büyük harf dönüşümü harfleri bozar */
+  :lang(hi) .eyebrow, :lang(bn) .eyebrow, :lang(ar) .eyebrow, :lang(ur) .eyebrow, :lang(zh) .eyebrow, :lang(ja) .eyebrow,
+  :lang(hi) h1, :lang(bn) h1, :lang(ar) h1, :lang(ur) h1, :lang(zh) h1, :lang(ja) h1 { letter-spacing: 0; }
+  h1, .sub { text-wrap: balance; }
+  :lang(ja) h1, :lang(ja) .sub, :lang(zh) h1, :lang(zh) .sub { word-break: auto-phrase; line-height: 1.2; }
+  :lang(zh) .square h1, :lang(ja) .square h1 { font-size: 80px; }
+  :lang(zh) .story h1, :lang(ja) .story h1 { font-size: 100px; }
+  :lang(zh) .landscape h1, :lang(ja) .landscape h1 { font-size: 64px; }
 </style>
 </head>
 <body>
@@ -95,44 +105,41 @@
   </div>
   <div class="visual" id="visual"></div>
 </div>
+<script src="strings.js"></script>
 <script>
-  var T = {
-    tr: {
-      free: "Ücretsiz",
-      main:     { e: "Sigarayı bırakma yardımcısı", h: "Say. Azalt. Bırak.", s: "Saydığını azaltırsın, azalttığını bırakırsın.", shot: "01-craving" },
-      craving:  { e: "Kriz desteği", h: "Krizi 5 dakikada atlat.", s: "Ritimli nefes ve baş etme önerileri yanında.", shot: "02-ride-it-out" },
-      plan:     { e: "Azalan plan", h: "Her gün biraz daha az.", s: "Hedefin sıfıra inene kadar kendiliğinden düşer.", shot: "04-plan" },
-      recovery: { e: "İyileşme takvimi", h: "Vücudun iyileşiyor.", s: "20 dakikadan 15 yıla, her adımı gör.", shot: "03-recovery" },
-      insights: { e: "İstatistikler", h: "Krizler ne zaman geliyor?", s: "Saatlik, haftalık ve yıllık grafiklerle öğren.", shot: "05-insights" },
-      widget:   { e: "Ana ekran widget'ı", h: "Saymak için açman bile gerekmez.", s: "Sigarasız geçen süre her an ana ekranında.", w: ["Sigarasız", "Bugün"] }
-    },
-    en: {
-      free: "Free",
-      main:     { e: "Quit-smoking companion", h: "Count. Cut down. Quit.", s: "What you count, you cut. What you cut, you quit.", shot: "01-craving" },
-      craving:  { e: "Craving support", h: "Beat the craving in 5 minutes.", s: "Paced breathing and coping actions, right there.", shot: "02-ride-it-out" },
-      plan:     { e: "Taper plan", h: "A little less every day.", s: "Your target falls on its own until it reaches zero.", shot: "04-plan" },
-      recovery: { e: "Recovery timeline", h: "Your body is healing.", s: "From 20 minutes to 15 years, see every step.", shot: "03-recovery" },
-      insights: { e: "Insights", h: "When do cravings hit?", s: "Find out with hourly, weekly and yearly charts.", shot: "05-insights" },
-      widget:   { e: "Home screen widget", h: "Count without opening the app.", s: "Your smoke-free time, always on your home screen.", w: ["Smoke-free", "Today"] }
-    }
-  };
+  // Metinler i18n/<dil>.json'dan tools/build.py ile strings.js'e üretilir.
+  var SHOT = { main: "01-craving", craving: "02-ride-it-out", plan: "04-plan", recovery: "03-recovery", insights: "05-insights" };
   var q = new URLSearchParams(location.search);
-  var lang = q.get("lang") === "en" ? "en" : "tr";
-  var dir = lang === "en" ? "en" : "tr";
-  var v = T[lang][q.get("v")] ? q.get("v") : "main";
+  var lang = T[q.get("lang")] ? q.get("lang") : "en";
+  var L = T[lang];
+  var v = SHOT[q.get("v")] || q.get("v") === "widget" ? q.get("v") : "main";
   var f = q.get("f") || "landscape";
-  var d = T[lang][v];
   document.documentElement.lang = lang;
+  document.documentElement.dir = L._dir;
   document.getElementById("c").classList.add(f);
-  document.getElementById("eyebrow").textContent = d.e;
-  document.getElementById("h").textContent = d.h;
-  document.getElementById("s").textContent = d.s;
-  document.getElementById("free").textContent = T[lang].free;
+  document.getElementById("eyebrow").textContent = L[v + "_e"];
+  document.getElementById("h").textContent = L[v + "_h"];
+  document.getElementById("s").textContent = L[v + "_s"];
+  document.getElementById("free").textContent = L.free;
   var vis = document.getElementById("visual");
-  if (d.shot) {
-    vis.innerHTML = '<div class="shot"><img src="../../assets/img/' + dir + '/' + d.shot + '.jpg" alt=""></div>';
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  if (v !== "widget") {
+    var box = el("div", "shot"), img = el("img");
+    img.src = "../../assets/img/" + L._shots + "/" + SHOT[v] + ".jpg"; img.alt = "";
+    box.appendChild(img); vis.appendChild(box);
   } else {
-    vis.innerHTML = '<div class="home"><div class="wdg"><div class="t"><small>' + d.w[0] + '</small><b>15:06:42</b></div><div><small>' + d.w[1] + '</small><b>3</b></div><div class="add">+</div></div><div class="apps"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>';
+    var home = el("div", "home"), w = el("div", "wdg"), a = el("div", "t"), b = el("div"), apps = el("div", "apps");
+    a.appendChild(el("small", null, L.widget_w1)); a.appendChild(el("b", null, "15:06:42"));
+    b.appendChild(el("small", null, L.widget_w2)); b.appendChild(el("b", null, "3"));
+    w.appendChild(a); w.appendChild(b); w.appendChild(el("div", "add", "+"));
+    for (var i = 0; i < 8; i++) apps.appendChild(el("span"));
+    home.appendChild(w); home.appendChild(apps); vis.appendChild(home);
+  }
+  // Kare ve dikey formatta görseli metnin bittiği yerin altına yerleştir.
+  if (f !== "landscape") {
+    var bottom = document.querySelector(".text").getBoundingClientRect().bottom;
+    var item = vis.firstChild, min = f === "square" ? 400 : 860;
+    item.style.top = Math.max(min, Math.round(bottom + 48)) + "px";
   }
 </script>
 </body>

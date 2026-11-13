@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Sosyal medya / OG görsellerini tools/og/template.html'den üretir.
-# Kullanım: tools/og/render.sh            (tümü)
-#           tools/og/render.sh main tr    (tek konu, tek dil)
+# Kullanım: tools/og/render.sh                  (tüm konular, tüm diller)
+#           tools/og/render.sh main "tr de"    (belirli konu ve diller)
 # Gereken: Google Chrome (macOS) ve sips. Yeni paket gerekmez.
+# Önce metinleri güncellemek için: python3 tools/build.py
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -13,7 +14,7 @@ TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
 VARIANTS=(${1:-main craving plan recovery insights widget})
-LANGS=(${2:-tr en})
+LANGS=(${2:-$(cd "$ROOT/i18n" && ls *.json | sed "s/\.json$//" | tr "\n" " ")})
 FORMATS=("landscape:1200,630" "square:1080,1080" "story:1080,1920")
 
 for lang in "${LANGS[@]}"; do

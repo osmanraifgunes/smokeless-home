@@ -8,38 +8,41 @@ https://osmanraifgunes.github.io/smokeless-home/
 
 ## Yapı
 
+Site, uygulamanın desteklediği 15 dilde yayınlanır: en (kök), tr, es, fr, de, pt, ru, ar, ur, hi, bn, zh, ja, id, vi. Her dilin kendi sayfası (`/tr/`, `/de/`…) ve kendi sosyal medya önizleme görseli vardır.
+
 | Yol | Ne |
 |---|---|
-| `index.html` | Tek sayfa. Varsayılan dil İngilizce; Türkçe `?lang=tr` ile ya da TR düğmesiyle açılır. CSS/JS satır içi, harici bağımlılık yok. |
-| `media.html` | Medya kiti: tüm sosyal medya görselleri, indirilebilir. |
-| `assets/img/` | İkon ve uygulama ekran görüntüleri (`en/`, `tr/`). |
-| `assets/og/` | Sosyal medya görselleri: 6 konu × 2 dil × 3 format (1200×630, 1080×1080, 1080×1920). |
-| `tools/og/` | Bu görselleri üreten şablon ve betik. |
-| `robots.txt`, `sitemap.xml` | SEO. |
-| Yayın | GitHub Pages, "Deploy from branch": `main` / kök. Her push otomatik yayınlanır. |
+| `i18n/<dil>.json` | **Tüm metinlerin kaynağı.** `page` sayfa metinleri, `og` sosyal medya görsel metinleri. |
+| `tools/site/page.html` | Sayfa şablonu (`{{anahtar}}` yer tutucuları). |
+| `tools/build.py` | Şablon + çevirilerden `index.html`, `<dil>/index.html`, `media.html`, `sitemap.xml` ve `tools/og/strings.js` üretir. |
+| `tools/og/` | Sosyal medya görsel şablonu ve render betiği. |
+| `assets/img/<dil>/` | Uygulama ekran görüntüleri (en, tr, es, fr, ar, hi, zh; diğer diller `en` kullanır). |
+| `assets/og/<dil>/` | Sosyal medya görselleri: 6 konu × 3 format (1200×630, 1080×1080, 1080×1920). |
+| `index.html`, `<dil>/index.html`, `media.html`, `sitemap.xml` | **Üretilen dosyalar — elle düzenlemeyin.** |
+| `robots.txt` | SEO. |
 
-## Dil
+Yayın: GitHub Pages, "Deploy from branch" (`main` / kök). Her push otomatik yayınlanır.
 
-Metinler `index.html` içinde İngilizce durur (arama motorları ve sosyal medya botları bunu görür). Türkçe karşılıklar sayfanın sonundaki `I18N.tr` sözlüğündedir; yeni metin eklerken iki sözlüğe de aynı `data-i18n` anahtarıyla ekleyin.
+## Metin değiştirme
 
-## Sosyal medya görsellerini yeniden üretme
+1. `i18n/<dil>.json` dosyalarını düzenleyin (yeni anahtar eklerken 15 dosyanın hepsine ekleyin; build eksik anahtarda durur).
+2. `python3 tools/build.py`
+3. Sosyal medya görsel metni değiştiyse: `tools/og/render.sh` (tümü) veya `tools/og/render.sh main "tr de"`.
+4. Görseller değiştiyse `tools/build.py` içindeki `OG_VERSION`'ı artırıp tekrar build alın; sosyal medya önbelleği kırılır.
 
-macOS + Google Chrome gerekir, yeni paket gerekmez.
+Gereken: Python 3, macOS + Google Chrome (görseller için). Yeni paket gerekmez.
 
-```sh
-tools/og/render.sh                  # tümü
-tools/og/render.sh "main widget" en # belirli konular / dil
-```
+## Paylaşım linkleri
 
-Metinler `tools/og/template.html` içindeki `T` sözlüğündedir.
+Her dil kendi linkiyle paylaşılmalı ki önizleme görseli o dilde çıksın: `https://osmanraifgunes.github.io/smokeless-home/tr/` gibi. Eski `?lang=tr` linkleri `/tr/`'ye yönlenir.
 
 ## SEO
 
-- `canonical`, `hreflang` (en, tr, x-default), Open Graph, Twitter kartı
-- JSON-LD: `MobileApplication` ve `FAQPage`
-- `robots.txt` ve `sitemap.xml`
+- Her dilde `canonical`, 15 dil için `hreflang` + `x-default`, Open Graph, Twitter kartı
+- JSON-LD: `MobileApplication` ve `FAQPage` (her dilde)
+- `robots.txt`, çok dilli `sitemap.xml`
 
-Yayına aldıktan sonra Google Search Console'a siteyi ekleyip `sitemap.xml`'i gönderin. Özel alan adına geçilirse `index.html`, `media.html`, `robots.txt` ve `sitemap.xml` içindeki `osmanraifgunes.github.io/smokeless-home/` adresini değiştirin.
+Yayına aldıktan sonra Google Search Console'a siteyi ekleyip `sitemap.xml`'i gönderin. Özel alan adına geçilirse `tools/build.py` içindeki `BASE` ve `robots.txt`'yi değiştirip build alın.
 
 ## Yerelde çalıştırma
 
@@ -52,5 +55,5 @@ python3 -m http.server 8080
 Kaynak: `../smokeless/stores/ios/iphone/1320x2868/<dil>/`.
 
 ```sh
-sips -s format jpeg -s formatOptions 78 -Z 1100 <kaynak>.png --out assets/img/en/<ad>.jpg
+sips -s format jpeg -s formatOptions 78 -Z 1100 <kaynak>.png --out assets/img/<dil>/<ad>.jpg
 ```
